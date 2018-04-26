@@ -1,7 +1,6 @@
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -18,13 +17,13 @@ public class MazeTest extends Application {
 	private StackPane spn1;
 	private PixelReader pr;
 	private Color color;
-
+	Image Ming;
 
 	@Override
 	public void start(Stage stage) throws Exception {
 
 		//Image Imports
-		Image Ming = new Image("maze.png");
+		Ming = new Image("maze.png");
 		ImageView imgViewM = new ImageView(Ming);
 		Image Ding = new Image("droid.jpg");
 		ImageView imgViewD = new ImageView(Ding);
@@ -38,13 +37,11 @@ public class MazeTest extends Application {
 		spn2.setLayoutX(15);
 		spn2.setLayoutY(258);
 
+		//this.readPixelColor(Ming);
+		
 		Group g = new Group(spn1, spn2);
-
 		Scene sn = new Scene(g, 607, 421);
-
-
-		this.readPixelColor(Ming);
-
+		
 		if(color != Color.WHITE) {
 
 			sn.setOnKeyPressed(this::processKeyPress);
@@ -56,7 +53,6 @@ public class MazeTest extends Application {
 		stage.setTitle("Maze Game");
 		stage.show();
 
-
 	}
 
 	//Reads in the Color of each pixel per X and Y value then Prints them 
@@ -65,7 +61,7 @@ public class MazeTest extends Application {
 		int width = (int)Ming.getWidth();
 		int height = (int)Ming.getHeight();
 		int y;
-		int x = 0;
+		int x;
 
 		pr = Ming.getPixelReader();
 
@@ -83,24 +79,36 @@ public class MazeTest extends Application {
 
 	}
 
+	private boolean readPixelColor2(Image Ming, double x,double y) {
+
+		pr = Ming.getPixelReader();
+				color = pr.getColor((int)x, (int)y);
+				System.out.println("Color y: " + y + " " + color + " Color x: " + x + " " + color);
+				return (color.getBlue() == 0.1);
+	}
 
 
-	//Key Press Method
+	//Key Press Method moves Droid around Maze
 	public void processKeyPress(KeyEvent event) {
 				
 		switch (event.getCode()) {
 
 		case UP:
-			spn2.setLayoutY(spn2.getLayoutY() - MOVE);
-			break;
+			if(!readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY()))spn2.setLayoutY(spn2.getLayoutY() - MOVE);
+			readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY());	
+				
+				break;
 		case DOWN:
-			spn2.setLayoutY(spn2.getLayoutY() + MOVE);
+			if(!readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY()))spn2.setLayoutY(spn2.getLayoutY() + MOVE);
+			readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY());
 			break;
 		case RIGHT:
-			spn2.setLayoutX(spn2.getLayoutX() + MOVE);
+			if(!readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY()))spn2.setLayoutX(spn2.getLayoutX() + MOVE);
+			readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY());
 			break;
 		case LEFT:
-			spn2.setLayoutX(spn2.getLayoutX() - MOVE);
+			if(!readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY()))spn2.setLayoutX(spn2.getLayoutX() - MOVE);
+			readPixelColor2(Ming, spn2.getLayoutX(), spn2.getLayoutY());
 			break;
 		default:
 			break;
